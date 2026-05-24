@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Word Laboratory — damrosch.net</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #F7F6F3;
+  --white: #FFFFFF;
+  --ink: #1A1814;
+  --ink-2: #4A4740;
+  --ink-3: #8A8680;
+  --accent: #2B4B8C;
+  --accent-light: #EEF2FA;
+  --border: #E2DFD8;
+  --serif: 'EB Garamond', Georgia, serif;
+  --mono: 'DM Mono', monospace;
+  --sans: 'DM Sans', system-ui, sans-serif;
+}
+html { font-size: 16px; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--serif);
+  -webkit-font-smoothing: antialiased;
+}
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  background: rgba(247,246,243,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  z-index: 100;
+  padding: 0 48px;
+  height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-logo { font-family: var(--mono); font-size: 14px; color: var(--ink); text-decoration: none; }
+.nav-links { display: flex; gap: 36px; list-style: none; }
+.nav-links a { font-family: var(--sans); font-size: 13px; color: var(--ink-2); text-decoration: none; }
+.nav-links a:hover { color: var(--accent); }
+
+.hero {
+  padding: 120px 48px 60px;
+  max-width: 900px; margin: 0 auto;
+  animation: fadeUp 0.7s ease forwards;
+}
+.hero-eyebrow {
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: 0.15em; color: var(--accent);
+  text-transform: uppercase; margin-bottom: 20px;
+}
+.hero-title { font-size: 48px; font-weight: 500; letter-spacing: -0.02em; margin-bottom: 16px; }
+.hero-desc { font-size: 17px; color: var(--ink-2); max-width: 520px; line-height: 1.75; }
+
+/* タブ */
+.tabs {
+  max-width: 900px; margin: 0 auto;
+  padding: 0 48px 0;
+  display: flex; gap: 0;
+  border-bottom: 1px solid var(--border);
+}
+.tab-btn {
+  font-family: var(--sans); font-size: 14px; font-weight: 500;
+  padding: 14px 28px;
+  background: none; border: none; cursor: pointer;
+  color: var(--ink-3);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color 0.2s, border-color 0.2s;
+}
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab-btn:hover { color: var(--ink); }
+
+/* コンテンツ */
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* アナグラム検索 */
+.search-section {
+  max-width: 900px; margin: 0 auto;
+  padding: 48px 48px;
+}
+.search-wrap {
+  position: relative; margin-bottom: 32px;
+}
+.search-input {
+  width: 100%;
+  font-family: var(--mono); font-size: 20px;
+  padding: 18px 24px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  outline: none;
+  color: var(--ink);
+  transition: border-color 0.2s;
+}
+.search-input:focus { border-color: var(--accent); }
+.search-input::placeholder { color: var(--ink-3); }
+.search-count {
+  font-family: var(--sans); font-size: 12px;
+  color: var(--ink-3); margin-bottom: 20px;
+  letter-spacing: 0.03em;
+}
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+.result-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 16px 20px;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.result-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 2px 12px rgba(43,75,140,0.08);
+}
+.result-word { font-size: 18px; font-weight: 500; margin-bottom: 4px; }
+.result-anagram { font-family: var(--sans); font-size: 12px; color: var(--ink-3); }
+.no-result {
+  font-family: var(--sans); font-size: 14px;
+  color: var(--ink-3); padding: 40px 0;
+  text-align: center; font-style: italic;
+}
+
+/* 元素記号セクション（プレースホルダー） */
+.elements-section {
+  max-width: 900px; margin: 0 auto; padding: 48px 48px;
+}
+.coming-soon {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 60px 40px;
+  text-align: center;
+}
+.coming-soon-icon { font-size: 40px; margin-bottom: 20px; }
+.coming-soon h3 { font-size: 24px; font-weight: 500; margin-bottom: 12px; }
+.coming-soon p { font-family: var(--sans); font-size: 14px; color: var(--ink-2); max-width: 400px; margin: 0 auto; line-height: 1.7; }
+.element-preview {
+  display: flex; justify-content: center; gap: 12px;
+  margin-top: 32px; flex-wrap: wrap;
+}
+.el-tag {
+  font-family: var(--mono); font-size: 13px;
+  padding: 6px 14px;
+  background: var(--accent-light);
+  color: var(--accent);
+  border-radius: 3px;
+  letter-spacing: 0.05em;
+}
+
+footer {
+  border-top: 1px solid var(--border);
+  margin: 60px 48px 0;
+  padding: 36px 0;
+  display: flex; justify-content: space-between;
+}
+.footer-left { font-family: var(--sans); font-size: 12px; color: var(--ink-3); }
+.footer-right { font-family: var(--mono); font-size: 12px; }
+.footer-right a { color: var(--accent); text-decoration: none; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">damrosch.net</a>
+  <ul class="nav-links">
+    <li><a href="/#research">Research</a></li>
+    <li><a href="/#projects">Projects</a></li>
+    <li><a href="mailto:contact@damrosch.net">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">Word Laboratory</div>
+  <h1 class="hero-title">Language as<br><em>combinatorics</em></h1>
+  <p class="hero-desc">
+    An anagram dictionary of 73,000+ words,
+    and a explorer of words hidden inside element symbols.
+  </p>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('anagram')">Anagram Dictionary</button>
+  <button class="tab-btn" onclick="switchTab('elements')">Element Words</button>
+</div>
+
+<!-- アナグラムタブ -->
+<div id="tab-anagram" class="tab-content active">
+  <div class="search-section">
+    <div class="search-wrap">
+      <input type="text" class="search-input" id="searchInput"
+        placeholder="Type a word..." autocomplete="off" spellcheck="false">
+    </div>
+    <div class="search-count" id="searchCount">73,335 words indexed</div>
+    <div class="results-grid" id="resultsGrid"></div>
+  </div>
+</div>
+
+<!-- 元素記号タブ -->
+<div id="tab-elements" class="tab-content">
+  <div class="elements-section">
+    <div class="coming-soon">
+      <div class="coming-soon-icon">⚗️</div>
+      <h3>Element Words Archive</h3>
+      <p>Words that can be spelled entirely using periodic table element symbols.
+         <em>Bosh</em> = B + Os + H. <em>Coins</em> = Co + In + S.
+         Coming soon.</p>
+      <div class="element-preview">
+        <span class="el-tag">B·Os·H → Bosh</span>
+        <span class="el-tag">Co·In·S → Coins</span>
+        <span class="el-tag">W·As·H → Wash</span>
+        <span class="el-tag">Cu·P → Cup</span>
+        <span class="el-tag">Fe·Ar → Fear</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-left">© 2026 Kenshirou Moriwaki · <a href="/" style="color:var(--accent);text-decoration:none;">damrosch.net</a></div>
+  <div class="footer-right"><a href="mailto:contact@damrosch.net">contact@damrosch.net</a></div>
+</footer>
+
+<script>
+let anagramData = {};
+let loaded = false;
+
+async function loadData() {
+  if (loaded) return;
+  try {
+    const res = await fetch('/words/anagrams.json');
+    anagramData = await res.json();
+    loaded = true;
+  } catch(e) {
+    console.error('Data load failed', e);
+  }
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach((b,i) => {
+    b.classList.toggle('active', (i===0 && tab==='anagram') || (i===1 && tab==='elements'));
+  });
+  document.getElementById('tab-anagram').classList.toggle('active', tab==='anagram');
+  document.getElementById('tab-elements').classList.toggle('active', tab==='elements');
+  if (tab === 'anagram') loadData();
+}
+
+function search(query) {
+  const grid = document.getElementById('resultsGrid');
+  const count = document.getElementById('searchCount');
+  if (!query) {
+    grid.innerHTML = '';
+    count.textContent = '73,335 words indexed';
+    return;
+  }
+  const q = query.toLowerCase();
+  const keys = Object.keys(anagramData);
+  const matches = keys.filter(w => w.includes(q)).slice(0, 60);
+  count.textContent = `${matches.length}${matches.length===60?'+':''} results for "${query}"`;
+  if (matches.length === 0) {
+    grid.innerHTML = '<div class="no-result">No words found</div>';
+    return;
+  }
+  grid.innerHTML = matches.map(word => {
+    const anagrams = anagramData[word];
+    const anagramList = Array.isArray(anagrams)
+      ? anagrams.slice(0,3).join(', ')
+      : (anagrams || '—');
+    return `<div class="result-card" onclick="document.getElementById('searchInput').value='${word}';search('${word}')">
+      <div class="result-word">${word}</div>
+      <div class="result-anagram">${anagramList}</div>
+    </div>`;
+  }).join('');
+}
+
+document.getElementById('searchInput').addEventListener('input', async e => {
+  if (!loaded) await loadData();
+  search(e.target.value.trim());
+});
+
+loadData();
+</script>
+</body>
+</html>
