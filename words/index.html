@@ -9,33 +9,21 @@
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  --bg: #F7F6F3;
-  --white: #FFFFFF;
-  --ink: #1A1814;
-  --ink-2: #4A4740;
-  --ink-3: #8A8680;
-  --accent: #2B4B8C;
-  --accent-light: #EEF2FA;
+  --bg: #F7F6F3; --white: #FFFFFF;
+  --ink: #1A1814; --ink-2: #4A4740; --ink-3: #8A8680;
+  --accent: #2B4B8C; --accent-light: #EEF2FA;
   --border: #E2DFD8;
   --serif: 'EB Garamond', Georgia, serif;
   --mono: 'DM Mono', monospace;
   --sans: 'DM Sans', system-ui, sans-serif;
 }
 html { font-size: 16px; }
-body {
-  background: var(--bg);
-  color: var(--ink);
-  font-family: var(--serif);
-  -webkit-font-smoothing: antialiased;
-}
+body { background: var(--bg); color: var(--ink); font-family: var(--serif); -webkit-font-smoothing: antialiased; }
 
-/* NAV */
 nav {
   position: fixed; top: 0; left: 0; right: 0;
-  background: rgba(247,246,243,0.92);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
-  z-index: 100;
+  background: rgba(247,246,243,0.92); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border); z-index: 100;
   padding: 0 48px; height: 60px;
   display: flex; align-items: center; justify-content: space-between;
 }
@@ -44,134 +32,112 @@ nav {
 .nav-links a { font-family: var(--sans); font-size: 13px; color: var(--ink-2); text-decoration: none; transition: color 0.2s; }
 .nav-links a:hover { color: var(--accent); }
 
-/* HERO */
-.hero {
-  padding: 120px 48px 48px;
-  max-width: 900px; margin: 0 auto;
-  animation: fadeUp 0.7s ease forwards;
-}
-.hero-eyebrow {
-  font-family: var(--mono); font-size: 11px;
-  letter-spacing: 0.15em; color: var(--accent);
-  text-transform: uppercase; margin-bottom: 20px;
-}
+.hero { padding: 120px 48px 48px; max-width: 900px; margin: 0 auto; animation: fadeUp 0.7s ease forwards; }
+.hero-eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; color: var(--accent); text-transform: uppercase; margin-bottom: 20px; }
 .hero-title { font-size: 48px; font-weight: 500; letter-spacing: -0.02em; margin-bottom: 16px; line-height: 1.1; }
 .hero-title em { font-style: italic; color: var(--ink-2); }
 .hero-desc { font-size: 17px; color: var(--ink-2); max-width: 520px; line-height: 1.75; }
 
-/* TABS */
-.tabs {
-  max-width: 900px; margin: 0 auto;
-  padding: 0 48px;
-  display: flex;
-  border-bottom: 1px solid var(--border);
-}
+.tabs { max-width: 900px; margin: 0 auto; padding: 0 48px; display: flex; border-bottom: 1px solid var(--border); }
 .tab-btn {
   font-family: var(--sans); font-size: 14px; font-weight: 500;
-  padding: 14px 28px;
-  background: none; border: none; cursor: pointer;
-  color: var(--ink-3);
-  border-bottom: 2px solid transparent;
-  margin-bottom: -1px;
+  padding: 14px 28px; background: none; border: none; cursor: pointer;
+  color: var(--ink-3); border-bottom: 2px solid transparent; margin-bottom: -1px;
   transition: color 0.2s, border-color 0.2s;
 }
 .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
 .tab-btn:hover { color: var(--ink); }
+.tab-count { font-weight: 300; color: var(--ink-3); font-size: 12px; margin-left: 6px; }
 
-/* TAB CONTENT */
 .tab-content { display: none; }
 .tab-content.active { display: block; }
 
-/* SEARCH SECTION */
-.search-section {
-  max-width: 900px; margin: 0 auto;
-  padding: 48px 48px;
-}
-.search-wrap { position: relative; margin-bottom: 20px; }
+.search-section { max-width: 900px; margin: 0 auto; padding: 48px 48px; }
 .search-input {
-  width: 100%;
-  font-family: var(--mono); font-size: 20px;
-  padding: 18px 24px;
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  outline: none; color: var(--ink);
-  transition: border-color 0.2s;
+  width: 100%; font-family: var(--mono); font-size: 20px;
+  padding: 18px 24px; background: var(--white);
+  border: 1px solid var(--border); border-radius: 4px;
+  outline: none; color: var(--ink); transition: border-color 0.2s;
+  margin-bottom: 20px;
 }
 .search-input:focus { border-color: var(--accent); }
 .search-input::placeholder { color: var(--ink-3); }
 .search-meta {
-  font-family: var(--sans); font-size: 12px;
-  color: var(--ink-3); margin-bottom: 24px;
-  letter-spacing: 0.03em;
-  display: flex; justify-content: space-between; align-items: center;
+  font-family: var(--sans); font-size: 12px; color: var(--ink-3);
+  margin-bottom: 24px; letter-spacing: 0.03em;
+  display: flex; justify-content: space-between;
 }
-.loading-indicator {
-  font-family: var(--mono); font-size: 11px;
-  color: var(--accent); letter-spacing: 0.08em;
-}
+.loading { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.08em; }
 
-/* RESULTS */
-.results-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-  gap: 12px;
-}
+/* アナグラム結果 */
+.results-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px; }
 .result-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 18px 20px;
-  cursor: pointer;
+  background: var(--white); border: 1px solid var(--border); border-radius: 4px;
+  padding: 18px 20px; cursor: pointer;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
-.result-card:hover {
-  border-color: var(--accent);
-  box-shadow: 0 2px 12px rgba(43,75,140,0.08);
-}
+.result-card:hover { border-color: var(--accent); box-shadow: 0 2px 12px rgba(43,75,140,0.08); }
 .result-word { font-size: 19px; font-weight: 500; margin-bottom: 6px; }
-
-/* アナグラム用 */
 .result-anagram { font-family: var(--sans); font-size: 12px; color: var(--ink-3); line-height: 1.5; }
 
-/* 元素記号用 */
-.result-elements {
-  font-family: var(--mono); font-size: 12px;
-  color: var(--accent); letter-spacing: 0.05em;
+/* 元素カード結果リスト */
+.elements-list { display: flex; flex-direction: column; gap: 16px; }
+.element-word-row {
+  background: var(--white); border: 1px solid var(--border); border-radius: 4px;
+  padding: 24px 28px; cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
-.element-symbol {
-  display: inline-block;
-  background: var(--accent-light);
-  color: var(--accent);
-  padding: 1px 5px;
-  border-radius: 2px;
-  margin: 1px 2px;
-  font-size: 11px;
-  font-weight: 500;
+.element-word-row:hover { border-color: var(--accent); box-shadow: 0 2px 16px rgba(43,75,140,0.08); }
+.element-word-title {
+  font-size: 22px; font-weight: 500; letter-spacing: -0.01em;
+  margin-bottom: 16px; color: var(--ink);
+}
+
+/* 周期表カード */
+.element-cards { display: flex; flex-wrap: wrap; gap: 10px; }
+.el-card {
+  display: flex; flex-direction: column; align-items: center;
+  width: 72px; min-height: 72px;
+  border: 2px solid var(--ink); border-radius: 4px;
+  background: var(--white); padding: 4px 6px 6px;
+  position: relative; font-family: var(--sans);
+}
+.el-no {
+  font-size: 11px; font-weight: 500;
+  color: var(--ink-2); align-self: flex-start;
+  line-height: 1.2;
+}
+.el-symbol {
+  font-size: 26px; font-weight: 700;
+  color: var(--ink); line-height: 1.1;
+  font-family: var(--serif); letter-spacing: -0.01em;
+}
+.el-name {
+  font-size: 9px; color: var(--ink-3);
+  text-align: center; margin-top: 2px;
+  text-transform: uppercase; letter-spacing: 0.04em;
+  line-height: 1.2;
+}
+.el-number-seq {
+  font-family: var(--mono); font-size: 11px;
+  color: var(--ink-3); margin-top: 12px;
+  letter-spacing: 0.05em;
 }
 
 .no-result {
-  font-family: var(--sans); font-size: 14px;
-  color: var(--ink-3); padding: 60px 0;
-  text-align: center; font-style: italic;
-  grid-column: 1 / -1;
+  font-family: var(--sans); font-size: 14px; color: var(--ink-3);
+  padding: 60px 0; text-align: center; font-style: italic;
 }
 
-/* FOOTER */
 footer {
-  border-top: 1px solid var(--border);
-  margin: 60px 48px 0;
-  padding: 36px 0;
-  display: flex; justify-content: space-between; align-items: center;
+  border-top: 1px solid var(--border); margin: 60px 48px 0;
+  padding: 36px 0; display: flex; justify-content: space-between; align-items: center;
 }
 .footer-left { font-family: var(--sans); font-size: 12px; color: var(--ink-3); }
 .footer-right { font-family: var(--mono); font-size: 12px; }
 .footer-right a { color: var(--accent); text-decoration: none; }
 
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
+@keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 </style>
 </head>
 <body>
@@ -196,23 +162,21 @@ footer {
 
 <div class="tabs">
   <button class="tab-btn active" onclick="switchTab('anagram')">
-    Anagram Dictionary <span style="font-weight:300;color:var(--ink-3);font-size:12px;margin-left:6px;">73,335</span>
+    Anagram Dictionary <span class="tab-count">73,335</span>
   </button>
   <button class="tab-btn" onclick="switchTab('elements')">
-    Element Words <span style="font-weight:300;color:var(--ink-3);font-size:12px;margin-left:6px;">54,766</span>
+    Element Words <span class="tab-count">54,766</span>
   </button>
 </div>
 
 <!-- アナグラムタブ -->
 <div id="tab-anagram" class="tab-content active">
   <div class="search-section">
-    <div class="search-wrap">
-      <input type="text" class="search-input" id="anagramInput"
-        placeholder="Search a word..." autocomplete="off" spellcheck="false">
-    </div>
+    <input type="text" class="search-input" id="anagramInput"
+      placeholder="Search a word..." autocomplete="off" spellcheck="false">
     <div class="search-meta">
       <span id="anagramCount">73,335 words indexed</span>
-      <span class="loading-indicator" id="anagramLoading" style="display:none;">Loading...</span>
+      <span class="loading" id="anagramLoading" style="display:none;">Loading...</span>
     </div>
     <div class="results-grid" id="anagramGrid"></div>
   </div>
@@ -221,15 +185,13 @@ footer {
 <!-- 元素記号タブ -->
 <div id="tab-elements" class="tab-content">
   <div class="search-section">
-    <div class="search-wrap">
-      <input type="text" class="search-input" id="elementsInput"
-        placeholder="Search a word..." autocomplete="off" spellcheck="false">
-    </div>
+    <input type="text" class="search-input" id="elementsInput"
+      placeholder="Search a word..." autocomplete="off" spellcheck="false">
     <div class="search-meta">
       <span id="elementsCount">54,766 words indexed</span>
-      <span class="loading-indicator" id="elementsLoading" style="display:none;">Loading...</span>
+      <span class="loading" id="elementsLoading" style="display:none;">Loading...</span>
     </div>
-    <div class="results-grid" id="elementsGrid"></div>
+    <div class="elements-list" id="elementsGrid"></div>
   </div>
 </div>
 
@@ -239,45 +201,47 @@ footer {
 </footer>
 
 <script>
-// データストア
 const store = {
   anagram: { data: null, loaded: false },
   elements: { data: null, loaded: false }
 };
 
-// データ読み込み
 async function loadData(type) {
   if (store[type].loaded) return;
   const file = type === 'anagram' ? '/words/anagrams.json' : '/words/elements.json';
-  const loadingEl = document.getElementById(`${type}Loading`);
-  loadingEl.style.display = 'inline';
+  const el = document.getElementById(`${type}Loading`);
+  el.style.display = 'inline';
   try {
     const res = await fetch(file);
     store[type].data = await res.json();
     store[type].loaded = true;
-  } catch(e) {
-    console.error(`Failed to load ${type} data`, e);
-  }
-  loadingEl.style.display = 'none';
+  } catch(e) { console.error(e); }
+  el.style.display = 'none';
 }
 
-// タブ切り替え
 function switchTab(tab) {
-  ['anagram', 'elements'].forEach(t => {
-    document.querySelector(`.tab-btn:nth-child(${t === 'anagram' ? 1 : 2})`).classList.toggle('active', t === tab);
-    document.getElementById(`tab-${t}`).classList.toggle('active', t === tab);
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    b.classList.toggle('active', (i === 0 && tab === 'anagram') || (i === 1 && tab === 'elements'));
   });
+  document.getElementById('tab-anagram').classList.toggle('active', tab === 'anagram');
+  document.getElementById('tab-elements').classList.toggle('active', tab === 'elements');
   loadData(tab);
 }
 
-// 元素記号を色付きバッジにレンダリング
-function renderElements(str) {
-  return str.split('·').map(s =>
-    `<span class="element-symbol">${s}</span>`
-  ).join('');
+// 周期表カードをHTMLで生成
+function renderElementCards(cards) {
+  const cardHtml = cards.map(c => `
+    <div class="el-card">
+      <div class="el-no">${c.no || ''}</div>
+      <div class="el-symbol">${c.symbol}</div>
+      <div class="el-name">${c.name}</div>
+    </div>`).join('');
+  // 原子番号の連結を表示
+  const seq = cards.filter(c => c.no).map(c => c.no).join('·');
+  return `<div class="element-cards">${cardHtml}</div>
+    ${seq ? `<div class="el-number-seq">${seq}</div>` : ''}`;
 }
 
-// 検索
 function search(type, query) {
   const grid = document.getElementById(`${type}Grid`);
   const countEl = document.getElementById(`${type}Count`);
@@ -288,14 +252,12 @@ function search(type, query) {
     countEl.textContent = `${total} words indexed`;
     return;
   }
-
   const data = store[type].data;
   if (!data) return;
 
   const q = query.toLowerCase();
-  const keys = Object.keys(data);
-  const matches = keys.filter(w => w.includes(q)).slice(0, 60);
-  const suffix = matches.length === 60 ? '+' : '';
+  const matches = Object.keys(data).filter(w => w.includes(q)).slice(0, 40);
+  const suffix = matches.length === 40 ? '+' : '';
   countEl.textContent = `${matches.length}${suffix} results for "${query}"`;
 
   if (matches.length === 0) {
@@ -305,10 +267,8 @@ function search(type, query) {
 
   if (type === 'anagram') {
     grid.innerHTML = matches.map(word => {
-      const anagrams = store.anagram.data[word];
-      const list = Array.isArray(anagrams)
-        ? anagrams.slice(0, 3).join(', ')
-        : (anagrams || '—');
+      const v = data[word];
+      const list = Array.isArray(v) ? v.slice(0, 3).join(', ') : (v || '—');
       return `<div class="result-card" onclick="document.getElementById('anagramInput').value='${word}';search('anagram','${word}')">
         <div class="result-word">${word}</div>
         <div class="result-anagram">${list}</div>
@@ -316,27 +276,24 @@ function search(type, query) {
     }).join('');
   } else {
     grid.innerHTML = matches.map(word => {
-      const elStr = store.elements.data[word];
-      return `<div class="result-card">
-        <div class="result-word">${word}</div>
-        <div class="result-elements">${renderElements(elStr)}</div>
+      const cards = data[word];
+      return `<div class="element-word-row">
+        <div class="element-word-title">${word}</div>
+        ${renderElementCards(cards)}
       </div>`;
     }).join('');
   }
 }
 
-// イベントリスナー
 document.getElementById('anagramInput').addEventListener('input', async e => {
   if (!store.anagram.loaded) await loadData('anagram');
   search('anagram', e.target.value.trim());
 });
-
 document.getElementById('elementsInput').addEventListener('input', async e => {
   if (!store.elements.loaded) await loadData('elements');
   search('elements', e.target.value.trim());
 });
 
-// 初期ロード
 loadData('anagram');
 </script>
 </body>
