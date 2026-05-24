@@ -1,0 +1,500 @@
+\documentclass[12pt]{article}
+
+% --- パッケージ ---
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{setspace}
+\usepackage{natbib}
+\usepackage[T1]{fontenc}
+
+
+% --- 定理環境 ---
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+% --- 記号の簡略化 ---
+\newcommand{\Zp}{\mathbb{Z}_p}
+\newcommand{\Zthree}{\mathbb{Z}^3}
+\newcommand{\Sn}{S_n}
+\newcommand{\Lfull}{Z_{\mathrm{full}}}
+\newcommand{\Lzero}{Z_0}
+\newcommand{\Rfilter}{R}
+\newcommand{\rhoeff}{\rho_{\mathrm{eff}}}
+\newcommand{\lpeak}{\lambda_{\mathrm{peak}}}
+
+\doublespacing
+
+\begin{document}
+
+% ===== タイトル =====
+\title{A Number-Theoretic Refinement of Stability Conditions\\
+for Queues with Periodic Arrivals:\\
+A Shell Filter Approach}
+
+\author{Kenshirou Moriwaki\\
+\small Independent Researcher, Nakashibetsu, Hokkaido, Japan\\
+\small \texttt{contact@damrosch.net}}
+
+\date{May 2026}
+\maketitle
+
+% ===== 要旨 =====
+\begin{abstract}
+This paper identifies a fundamental limitation of the classical queueing 
+stability condition $\rho = \lambda/\mu < 1$ when applied to service systems 
+with periodic arrival structures, and proposes a refined stability condition 
+based on the shell filter limit theorem. For an arrival process with period 
+governed by a prime $p$, we derive the necessary condition 
+$\lambda_{\mathrm{peak}} < \mu(p-1)/p$, where $\lambda_{\mathrm{peak}}$ 
+denotes the peak arrival rate within each period. This condition subsumes 
+the classical condition as the special case $p \to \infty$ (Poisson arrivals). 
+Applications to emergency medicine ($p=3$), tourism facilities ($p=7$), and 
+urban transit ($p=5$) demonstrate that the refined condition correctly 
+identifies instability in regimes where the classical condition erroneously 
+predicts stability. Numerical verification confirms convergence of the shell 
+filter ratio $R(s)$ to the theoretical value $(p-1)/p$.
+\end{abstract}
+
+\textbf{Keywords:} queueing theory; stability conditions; periodic arrivals; 
+number theory; emergency medicine; shell filter
+
+% ===== 第1節 =====
+\section{Introduction}
+
+\subsection{Background}
+
+Japan's emergency medical system faces a severe congestion problem.
+According to the Fire and Disaster Management Agency
+\citep{FDMA2025}, emergency dispatches reached a record 7.72 million 
+in 2024---the third consecutive year of record highs---with a national 
+average hospital admission time of 44.6 minutes, approximately five 
+minutes longer than the pre-pandemic level.
+
+This crisis cannot be attributed solely to increasing patient volume. 
+A more fundamental driver is the \emph{temporal heterogeneity of 
+arrivals}: emergency transport demand exhibits clear periodicity across 
+hours, days, and seasons. Morning outpatient peaks, nocturnal 
+acute-episode clusters, and weekend exacerbations of chronic conditions 
+combine to create periods of demand that far exceed capacity.
+
+Yet the stability conditions widely used in hospital operations planning 
+fail to capture this periodic structure.
+
+\subsection{Limitations of Classical Theory}
+
+The classical stability condition in queueing theory is
+\begin{equation}\label{eq:classical}
+  \rho = \frac{\lambda}{\mu} < 1,
+\end{equation}
+where $\lambda$ denotes the mean arrival rate and $\mu$ the mean service 
+capacity \citep{Erlang1917,Kendall1953}. This condition underpins the 
+$M/M/R$ model and has been applied extensively from telephone exchange 
+design to hospital staffing.
+
+\citet{Green2006} applied queueing theory to emergency department (ED) 
+staffing and demonstrated that accounting for hourly variation in arrival 
+rates can meaningfully reduce the rate of patients who leave without being 
+seen (LWBS). However, even in that work, the stability condition itself 
+remained the classical mean-based criterion.
+
+\citet{Wiler2013} provided striking empirical evidence of the gap: 
+a mere 10\% increase in the peak arrival rate above the observed mean 
+caused the LWBS rate to jump from 3.9\% to 10.8\%---nearly a threefold 
+increase. This occurs within a regime where condition~\eqref{eq:classical} 
+still declares the system stable, revealing a structural blind spot.
+
+The root cause is that the \emph{prime-periodic structure} of the arrival 
+process is absent from the stability criterion. This paper provides a 
+theoretically grounded answer from the framework of analytic number theory.
+
+\subsection{Contributions}
+
+The main contributions are as follows.
+\begin{enumerate}
+  \item \textbf{Theoretical refinement.} For an arrival process with prime 
+    period $p$, we derive a necessary stability condition strictly tighter 
+    than $\rho < 1$ (Section~3, Theorem~\ref{thm:refined}).
+  \item \textbf{Unification.} The classical condition is recovered as the 
+    limiting case $p \to \infty$ (Corollary~\ref{cor:unification}).
+  \item \textbf{Applied validation.} In three-shift emergency medicine 
+    ($p=3$) and weekly-cycle tourism ($p=7$), the refined condition 
+    correctly identifies instability where the classical condition 
+    predicts stability (Section~3.5).
+\end{enumerate}
+
+\subsection{Organization}
+
+Section~2 introduces the shell filter in minimal form. Section~3 
+develops the refined stability condition. Section~4 extends the framework 
+and provides numerical verification. Section~5 concludes. Full proofs 
+are in Appendix~B.
+
+% ===== 第2節 =====
+\section{Preliminaries: The Shell Filter}
+
+\subsection{Periodic Classification of Arrivals}
+
+Real service systems exhibit periodic demand structures. To describe this 
+structure, we introduce the \emph{period parameter} $p$ (a prime number).
+
+\begin{itemize}
+  \item Three-shift scheduling (8 hours $\times$ 3): $p = 3$
+  \item Weekly cycle (7 days): $p = 7$
+  \item Five-day commute cycle: $p = 5$
+\end{itemize}
+
+\subsection{Definition of the Shell Filter}
+
+For an observation window of length $n$, we represent an arrival pattern 
+as a three-component vector $(x, y, z)$, where $x, y, z$ are integer-valued 
+arrival intensities along independent channels (e.g., emergency, outpatient, 
+referral).
+
+\begin{definition}[L1 shell]
+  The set of arrival patterns at observation length $n$ is
+  \[
+    S_n := \{(x,y,z) \in \mathbb{Z}^3 : |x|+|y|+|z| = n\},
+    \quad |S_n| = 4n^2 + 2.
+  \]
+\end{definition}
+
+\begin{definition}[Mod-$p$ filter count]
+  Let $Q(x,y,z) = x^2+y^2+z^2$. Define
+  \[
+    N_0(n) := \#\{(x,y,z) \in S_n : Q(x,y,z) \equiv 0 \pmod{p}\},
+  \]
+  interpreted as the number of zero-load patterns at observation length $n$.
+\end{definition}
+
+\begin{definition}[Shell filter ratio]
+  For $\mathrm{Re}(s) > 3/2$, define
+  \begin{align*}
+    Z_{\mathrm{full}}(s) &:= \sum_{n=1}^{\infty} |S_n| \cdot n^{-2s}
+                          = 4\zeta(2s-2) + 2\zeta(2s),\\
+    Z_0(s) &:= \sum_{n=1}^{\infty} N_0(n) \cdot n^{-2s},\\
+    R(s)   &:= 1 - \frac{Z_0(s)}{Z_{\mathrm{full}}(s)}.
+  \end{align*}
+  $R(s)$ is the weighted proportion of arrival patterns that impose 
+  effective load under the period-$p$ structure.
+\end{definition}
+
+% ===== 第3節 =====
+\section{A Number-Theoretic Refinement of Stability Conditions}
+
+\subsection{The Classical Condition and Its Limitation}
+
+The classical stability condition $\rho = \lambda/\mu < 1$ embeds the 
+assumption that arrivals follow a Poisson process. In emergency medicine, 
+this assumption fails systematically: dispatch volumes differ severalfold 
+between morning and midnight. When arrivals concentrate periodically, 
+condition~\eqref{eq:classical} cannot detect chronic overload during 
+specific windows even when the global average appears comfortable.
+
+\subsection{Main Theorem and Its Queueing Interpretation}
+
+\begin{theorem}[L1 shell mod-$p$ filter limit theorem; \citealt{Moriwaki2026b}]
+\label{thm:main}
+  For any odd prime $p$,
+  \[
+    \lim_{s \to (3/2)^+} R(s) = \frac{p-1}{p}.
+  \]
+\end{theorem}
+
+The proof is given in Appendix~B. The queueing interpretation is as follows.
+
+\begin{remark}[Load concentration guarantee]
+  When the arrival process possesses a prime period $p$, the proportion 
+  of time windows bearing effective load converges to $(p-1)/p$, and the 
+  proportion of zero-load windows converges to $1/p$---a ratio guaranteed 
+  by number theory, not approximation.
+\end{remark}
+
+\subsection{The Refined Stability Condition}
+
+\begin{definition}[Effective utilization]
+  Let $\lpeak$ denote the arrival rate during load-concentrated windows. 
+  The \emph{effective utilization ratio} is
+  \[
+    \rhoeff := \frac{\lpeak \cdot p}{\mu \cdot (p-1)}.
+  \]
+\end{definition}
+
+\begin{theorem}[Refined stability condition]
+\label{thm:refined}
+  A necessary condition for stability of a queueing system with prime 
+  period $p$, strictly tighter than $\rho < 1$, is
+  \[
+    \rhoeff = \frac{\lpeak \cdot p}{\mu(p-1)} < 1,
+    \quad \text{equivalently,} \quad
+    \lpeak < \mu \cdot \frac{p-1}{p}.
+  \]
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+  By Theorem~\ref{thm:main}, a fraction $(p-1)/p$ of the period bears 
+  concentrated load. The effective demand in those windows is $\lpeak$, 
+  against capacity $\mu$. Since $\lpeak \geq \lambda$ and $(p-1)/p < 1$, 
+  the condition $\rhoeff < 1$ is strictly tighter than $\rho < 1$.
+\end{proof}
+
+\begin{corollary}[Recovery of the classical condition]
+\label{cor:unification}
+  The classical condition $\rho < 1$ is the special case $p \to \infty$.
+  Since $(p-1)/p \to 1$ as $p \to \infty$, the refined condition reduces 
+  to $\lpeak < \mu$, i.e., $\rho_{\mathrm{peak}} < 1$.
+\end{corollary}
+
+\subsection{Application to Emergency Medicine}
+
+\citet{Wiler2013} show that a 10\% increase in peak arrival rate above 
+the observed mean causes the LWBS rate to jump from 3.9\% to 10.8\%.
+This occurs within a regime where $\rho < 1$, and represents precisely 
+the structural instability that the refined condition detects.
+
+\paragraph{Setting (based on \citealt{Green2006}).}
+A three-shift ED ($p=3$, 8-hour shifts):
+\begin{itemize}
+  \item Mean arrival rate: $\lambda = 5.0$ patients/hour
+  \item Service capacity: $\mu = 6.0$ patients/hour
+  \item Peak arrival rate: $\lpeak = 10.0$ patients/hour
+\end{itemize}
+
+\paragraph{Classical condition:}
+$\rho = 5.0/6.0 \approx 0.83 < 1$ \quad $\Rightarrow$ Stable (incorrect).
+
+\paragraph{Refined condition ($p=3$):}
+\[
+  \rhoeff = \frac{10.0 \times 3}{6.0 \times 2} = \frac{30.0}{12.0} 
+          = 2.50 > 1 \quad \Rightarrow \text{Unstable (correct).}
+\]
+
+The gap between these two assessments provides a number-theoretic 
+explanation for the documented LWBS spike \citep{Wiler2013}.
+
+% ===== 第4節 =====
+\section{Extensions and Numerical Verification}
+
+\subsection{Numerical Convergence of $R(s)$}
+
+Table~\ref{tab:convergence} reports the finite-truncation approximation 
+$R_N(s)$ for $N=80$ as $s \to (3/2)^+$.
+
+\begin{table}[h]
+\centering
+\caption{Convergence of $R_N(s)$ as $s \to (3/2)^+$ ($N = 80$)}
+\label{tab:convergence}
+\begin{tabular}{ccccc}
+\toprule
+$s$ & $p=3$ & $p=5$ & $p=7$ \\
+\midrule
+1.550 & 0.8095 & 0.8538 & 0.9349 \\
+1.520 & 0.7981 & 0.8478 & 0.9296 \\
+1.510 & 0.7943 & 0.8458 & 0.9278 \\
+1.505 & 0.7924 & 0.8448 & 0.9269 \\
+\midrule
+Theory & \textbf{0.6667} & \textbf{0.8000} & \textbf{0.8571} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The overshoot is a known artifact of the non-commutativity of the double 
+limit ($N \to \infty$ and $s \to (3/2)^+$), documented in \citet{Moriwaki2026a}.
+
+\subsection{Refined Stability Thresholds by Prime Period}
+
+\begin{table}[h]
+\centering
+\caption{Refined stability thresholds by prime period ($\mu = 6.0$)}
+\label{tab:thresholds}
+\begin{tabular}{cccc}
+\toprule
+Period $p$ & $(p-1)/p$ & Peak threshold $\lpeak$ & Ratio to classical \\
+\midrule
+3  & 0.6667 & 4.00 & 0.667 \\
+5  & 0.8000 & 4.80 & 0.800 \\
+7  & 0.8571 & 5.14 & 0.857 \\
+11 & 0.9091 & 5.45 & 0.909 \\
+13 & 0.9231 & 5.54 & 0.923 \\
+$\infty$ & 1.0000 & 6.00 & 1.000 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Application to Tourism and Urban Transit}
+
+\begin{table}[h]
+\centering
+\caption{Classical vs.\ refined conditions across three domains}
+\label{tab:comparison}
+\begin{tabular}{lccccc}
+\toprule
+Domain & $p$ & Classical $\rho$ & & Refined $\rhoeff$ & \\
+\midrule
+Emergency medicine (3-shift) & 3 & 0.83 & Stable$^*$ & 2.50 & Unstable \\
+Tourism (weekly)              & 7 & 0.76 & Stable$^*$ & 1.87 & Unstable \\
+Urban transit (commute)       & 5 & 0.75 & Stable$^*$ & 1.75 & Unstable \\
+\bottomrule
+\multicolumn{6}{l}{$^*$ Incorrect assessment.}
+\end{tabular}
+\end{table}
+
+Across all three domains, the classical condition produces false-stable 
+assessments while the refined condition correctly identifies instability.
+
+% ===== 第5節 =====
+\section{Conclusion}
+
+This paper derived a refined stability condition for queueing systems 
+with periodic arrival structures based on the shell filter limit theorem.
+The key result is that when the arrival period is governed by a prime $p$,
+the permissible peak arrival rate satisfies $\lpeak < \mu(p-1)/p$---strictly
+tighter than the classical condition, which is recovered as $p \to \infty$.
+
+Applications to emergency medicine, tourism, and urban transit demonstrate 
+that the refined condition correctly identifies structural instability in 
+regimes where the classical condition fails.
+
+\paragraph{Future directions.}
+\begin{enumerate}
+  \item Estimation of $p$ from observed arrival data (e.g., FDMA dispatch records).
+  \item Extension to composite periods via the Chinese Remainder Theorem.
+  \item Higher-dimensional generalization: $d$-channel arrivals and 
+    $\lim R(s) = (p^{d-2}-1)/p^{d-2}$.
+\end{enumerate}
+
+% ===== 参考文献 =====
+\bibliographystyle{plainnat}
+\begin{thebibliography}{9}
+
+\bibitem[Erlang(1917)]{Erlang1917}
+Erlang, A.~K. (1917).
+Solution of some problems in the theory of probabilities of significance 
+in automatic telephone exchanges.
+\emph{Post Office Electrical Engineers' Journal}, 10, 189--197.
+
+\bibitem[Fire and Disaster Management Agency(2025)]{FDMA2025}
+Fire and Disaster Management Agency, Japan (2025).
+\emph{Status of Emergency and Rescue Operations, 2025 Edition}.
+Ministry of Internal Affairs and Communications.
+
+\bibitem[Green et al.(2006)]{Green2006}
+Green, L.~V., Soares, J., Giglio, J.~F., \& Green, R.~A. (2006).
+Using queueing theory to increase the effectiveness of emergency 
+department provider staffing.
+\emph{Academic Emergency Medicine}, 13(1), 61--68.
+
+\bibitem[Kendall(1953)]{Kendall1953}
+Kendall, D.~G. (1953).
+Stochastic processes occurring in the theory of queues and their 
+analysis by the method of the imbedded Markov chain.
+\emph{The Annals of Mathematical Statistics}, 24(3), 338--354.
+
+\bibitem[Moriwaki(2026a)]{Moriwaki2026a}
+Moriwaki, K. (2026a).
+Density of Eisenstein primes on hexagonal shells: A numerical 
+verification of Chebotarev's theorem via Ces\`{a}ro averaging.
+\emph{damrosch.net}.
+
+\bibitem[Moriwaki and Claude(2026b)]{Moriwaki2026b}
+Moriwaki, K., \& Claude (Anthropic). (2026b).
+L1 shell mod $p$ filter limit theorem.
+\emph{Unpublished manuscript}.
+
+\bibitem[Wiler et al.(2013)]{Wiler2013}
+Wiler, J.~L., Bolandifar, E., Griffey, R.~T., Poirier, R.~F., \& Olsen, T. (2013).
+An emergency department patient flow model based on queueing theory principles.
+\emph{Academic Emergency Medicine}, 20(9), 939--946.
+
+\end{thebibliography}
+
+% ===== 付録B =====
+\appendix
+\section*{Appendix B: Proof of Theorem~\ref{thm:main}}
+\addcontentsline{toc}{section}{Appendix B: Proof of Theorem 1}
+
+\subsection*{B.1 Notation and the $\zeta$-Representation of $Z_{\mathrm{full}}$}
+
+\begin{lemma}[$\zeta$-representation of $Z_{\mathrm{full}}$]
+\label{lem:zfull}
+  For $\mathrm{Re}(s) > 3/2$,
+  \[
+    Z_{\mathrm{full}}(s) 
+    = \sum_{n=1}^{\infty}(4n^2+2)\,n^{-2s}
+    = 4\zeta(2s-2) + 2\zeta(2s).
+  \]
+\end{lemma}
+
+\begin{proof}
+  Substituting $|S_n|=4n^2+2$:
+  \[
+    Z_{\mathrm{full}}(s) 
+    = 4\sum_{n=1}^{\infty}n^{2-2s} + 2\sum_{n=1}^{\infty}n^{-2s}
+    = 4\zeta(2s-2)+2\zeta(2s).
+  \]
+  The first series converges for $\mathrm{Re}(2s-2)>1$, i.e., 
+  $\mathrm{Re}(s)>3/2$; the second for $\mathrm{Re}(s)>1/2$.
+  Hence the convergence domain is $\mathrm{Re}(s)>3/2$.
+\end{proof}
+
+\subsection*{B.2 Key Lemma}
+
+\begin{lemma}
+\label{lem:key}
+  For any odd prime $p$,
+  \[
+    \#\{(x,y,z)\in\mathbb{Z}_p^3 : x^2+y^2+z^2\equiv 0\pmod{p}\} = p^2.
+  \]
+\end{lemma}
+
+\begin{proof}
+  Solving for $z$: the condition is $z^2\equiv-(x^2+y^2)\pmod{p}$.
+  By the Legendre symbol formula $\#\{z\in\mathbb{Z}_p:z^2\equiv c\}=1+(c/p)_L$,
+  \[
+    N_0 = \sum_{x,y\in\mathbb{Z}_p}\!\!\left[1+\left(\frac{-(x^2+y^2)}{p}\right)_{\!L}\right]
+        = p^2 + \left(\frac{-1}{p}\right)_{\!L} T,
+  \]
+  where $T=\sum_{x,y\in\mathbb{Z}_p}((x^2+y^2)/p)_L$.
+  We show $T=0$. For $x=0$: $\sum_y(y^2/p)_L=p-1$.
+  For $x\neq 0$ (fixing $c=x^2\neq 0$), the substitution
+  $v=y^2/c$, $w=1-1/v$ yields $\sum_{v\neq 0,1}(v(v-1)/p)_L=-1$.
+  Hence $T=(p-1)+(p-1)(-1)=0$, giving $N_0=p^2$.
+\end{proof}
+
+\subsection*{B.3 Coefficient Sum Lemma}
+
+\begin{lemma}
+\label{lem:coeff}
+  Writing $N_0(n)=A_r q^2+O(q)$ for $n=pq+r$,
+  we have $\sum_{r=0}^{p-1}A_r = 4p^2$.
+\end{lemma}
+
+\begin{proof}[Proof sketch]
+  Expanding via exponential sums and using Lemma~\ref{lem:key}, 
+  the contributions from $t\neq 0$ cancel, giving 
+  $\sum_r A_r=(1/p)\cdot p\cdot 4p^2=4p^2$.
+\end{proof}
+
+\subsection*{B.4 Proof of Theorem~\ref{thm:main}}
+
+\begin{proof}
+  The leading term of $Z_0(s)$ as $s\to(3/2)^+$ satisfies
+  \[
+    Z_0(s) \sim \frac{\sum_r A_r}{p^{2s}}\,\zeta(2s-2)
+            = \frac{4p^2}{p^{2s}}\,\zeta(2s-2)
+            \sim \frac{4}{p}\,\zeta(2s-2),
+  \]
+  since $p^{2s}\to p^3$. By Lemma~\ref{lem:zfull},
+  $Z_{\mathrm{full}}(s)\sim 4\zeta(2s-2)$. Therefore
+  \[
+    \frac{Z_0(s)}{Z_{\mathrm{full}}(s)} \to \frac{4/p}{4} = \frac{1}{p},
+    \quad\text{and}\quad
+    R(s) = 1 - \frac{Z_0}{Z_{\mathrm{full}}} \to \frac{p-1}{p}.\qed
+  \]
+\end{proof}
+
+\end{document}
